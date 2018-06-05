@@ -6,6 +6,10 @@
         <p v-if="isConnected">We're connected to the server!</p>
       </v-flex>
 
+      <v-flex xs12>
+        Message: {{status}}
+      </v-flex>
+
       <v-flex xs10>
         <v-text-field v-model="message" solo></v-text-field>
       </v-flex>
@@ -37,7 +41,8 @@
                 message: '',
                 responses: [],
                 /*channel:'channel1',*/
-                isConnected: false
+                isConnected: false,
+                status:''
             }
         },
         sockets: {
@@ -53,8 +58,8 @@
             },
 
             // Fired when the server sends something on the "messageChannel" channel.
-            messageChannel(data) {
-                this.socketMessage = data
+            statusChannel(data) {
+                this.status = data
                 console.log('messageChannel')
             }
         },
@@ -62,6 +67,7 @@
             this.$options.sockets[this.channel] = (data) => {
                 this.responses.push(data)
                 console.log('created')
+                console.log(data)
             }
         },
         methods: {
