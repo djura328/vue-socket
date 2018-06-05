@@ -10,9 +10,11 @@ const io = require('socket.io')(4113, {
 });
 
 
+let numClients = 0;
 
 io.on("connection", client => {
     //console.log("New connection!");
+    numClients++
 
     client.on("channel1", newText => {
         console.log("cchannel1!");
@@ -24,11 +26,13 @@ io.on("connection", client => {
         io.emit("channel2", {user:'pera', message:newText});
     });
 
-    client.emit('statusChannel', 'You are connected!');
-    client.broadcast.emit('statusChannel', 'Another client has just connected!');
+    client.emit('statusChannel', 'You are connected! Connected user: ' + numClients);
+    client.broadcast.emit('statusChannel', 'Another client has just connected! Connected user: ' + numClients );
 
     client.on('disconnect', function () {
+        numClients--
         console.log("disconnect");
+        client.broadcast.emit('statusChannel', 'Another client has just connected out! Connected user: ' + numClients );
         io.emit('user disconnected');
     });
 
